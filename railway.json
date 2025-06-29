@@ -1,0 +1,12 @@
+{
+  "build": {
+    "nixpacksPlan": {
+      "providers": ["python"],
+      "phases": {
+        "setup": "pip install -r requirements.txt",
+        "build": "python -m compileall .",
+        "run": "python legion_omega_v4.py"
+      }
+    }
+  }
+}
