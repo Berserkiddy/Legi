@@ -140,7 +140,7 @@ class Logger:
 
 logger = Logger(level=LOG_LEVEL)
 
-logger.log("INFO", "Iniciando LEGIÓN OMEGA v4.0", module="core")
+logger.log("INFO", "Iniciando LEGIÓN OMEGA v4.0", modulo="core")
 
 
 
@@ -182,7 +182,7 @@ class SecurityManager:
 
         self.fernet = self._load_or_generate_key()
 
-        logger.log("INFO", "Gestor de seguridad inicializado", module="security")
+        logger.log("INFO", "Gestor de seguridad inicializado", modulo="security")
 
 
 
@@ -194,7 +194,7 @@ class SecurityManager:
 
                 key = key_file.read()
 
-            logger.log("INFO", "Clave de cifrado cargada", module="security")
+            logger.log("INFO", "Clave de cifrado cargada", modulo="security")
 
         else:
 
@@ -220,7 +220,7 @@ class SecurityManager:
 
                 key_file.write(key)
 
-            logger.log("INFO", "Nueva clave de cifrado generada", module="security")
+            logger.log("INFO", "Nueva clave de cifrado generada", modulo="security")
 
         return Fernet(key)
 
@@ -234,7 +234,7 @@ class SecurityManager:
 
         except Exception as e:
 
-            logger.log("ERROR", f"Error al cifrar: {str(e)}", module="security")
+            logger.log("ERROR", f"Error al cifrar: {str(e)}", modulo="security")
 
             return data
 
@@ -248,7 +248,7 @@ class SecurityManager:
 
         except Exception as e:
 
-            logger.log("ERROR", f"Error al descifrar: {str(e)}", module="security")
+            logger.log("ERROR", f"Error al descifrar: {str(e)}", modulo="security")
 
             return encrypted_data
 
@@ -304,7 +304,7 @@ class SecurityManager:
 
         except Exception as e:
 
-            logger.log("ERROR", f"Error generando identidad: {str(e)}", module="security")
+            logger.log("ERROR", f"Error generando identidad: {str(e)}", modulo="security")
 
             return {"id": "error", "name": "error", "created_at": "", "fingerprint": ""}
 
@@ -326,7 +326,7 @@ class DistributedMemory:
 
         self.connected = False
 
-        logger.log("INFO", f"Iniciando memoria distribuida: {redis_url}", module="memory")
+        logger.log("INFO", f"Iniciando memoria distribuida: {redis_url}", modulo="memory")
 
 
 
@@ -344,7 +344,7 @@ class DistributedMemory:
 
                 self.connected = True
 
-                logger.log("SUCCESS", "Conexión a Redis establecida", module="memory")
+                logger.log("SUCCESS", "Conexión a Redis establecida", modulo="memory")
 
                 return
 
@@ -356,7 +356,7 @@ class DistributedMemory:
 
                 await asyncio.sleep(2 ** retries)
 
-        logger.log("CRITICAL", "No se pudo conectar a Redis", module="memory")
+        logger.log("CRITICAL", "No se pudo conectar a Redis", modulo="memory")
 
         raise ConnectionError("No se pudo conectar a Redis")
 
@@ -392,7 +392,7 @@ class DistributedMemory:
 
         except Exception as e:
 
-            logger.log("ERROR", f"Error almacenando dato: {str(e)}", module="memory")
+            logger.log("ERROR", f"Error almacenando dato: {str(e)}", modulo="memory")
 
             return False
 
@@ -410,7 +410,7 @@ class DistributedMemory:
 
         except Exception as e:
 
-            logger.log("ERROR", f"Error obteniendo dato: {str(e)}", module="memory")
+            logger.log("ERROR", f"Error obteniendo dato: {str(e)}", modulo="memory")
 
             return None
 
@@ -430,7 +430,7 @@ class DistributedMemory:
 
         except Exception as e:
 
-            logger.log("ERROR", f"Error eliminando dato: {str(e)}", module="memory")
+            logger.log("ERROR", f"Error eliminando dato: {str(e)}", modulo="memory")
 
             return False
 
@@ -448,7 +448,7 @@ class DistributedMemory:
 
         except Exception as e:
 
-            logger.log("ERROR", f"Error listando claves: {str(e)}", module="memory")
+            logger.log("ERROR", f"Error listando claves: {str(e)}", modulo="memory")
 
             return []
 
@@ -470,7 +470,7 @@ class Executor:
 
         self.process_pool = ProcessPoolExecutor(max_workers=4)
 
-        logger.log("INFO", f"Executor iniciado (PID: {os.getpid()})", module="executor")
+        logger.log("INFO", f"Executor iniciado (PID: {os.getpid()})", modulo="executor")
 
 
 
@@ -546,7 +546,7 @@ class Executor:
 
             await self._store_task_result(task_id, task_data)
 
-            logger.log("ERROR", f"Error en tarea {task_id}: {str(e)}", module="executor")
+            logger.log("ERROR", f"Error en tarea {task_id}: {str(e)}", modulo="executor")
 
             return {"status": "error", "error": str(e)}
 
@@ -596,7 +596,7 @@ class Executor:
 
     def _sandbox_logger(self, message: str) -> None:
 
-        logger.log("DEBUG", message, module="sandbox")
+        logger.log("DEBUG", message, modulo="sandbox")
 
 
 
@@ -794,7 +794,7 @@ class CodeAnalyzer:
 
         self.rules = self._load_analysis_rules()
 
-        logger.log("INFO", "CodeAnalyzer iniciado", module="analyzer")
+        logger.log("INFO", "CodeAnalyzer iniciado", modulo="analyzer")
 
 
 
@@ -870,7 +870,7 @@ class CodeAnalyzer:
 
         except Exception as e:
 
-            logger.log("WARNING", f"No se cargaron reglas personalizadas: {str(e)}", module="analyzer")
+            logger.log("WARNING", f"No se cargaron reglas personalizadas: {str(e)}", modulo="analyzer")
 
         return default_rules
 
@@ -938,7 +938,7 @@ class CodeAnalyzer:
 
         except Exception as e:
 
-            logger.log("ERROR", f"Error en análisis: {str(e)}", module="analyzer")
+            logger.log("ERROR", f"Error en análisis: {str(e)}", modulo="analyzer")
 
             report["error"] = str(e)
 
@@ -1152,7 +1152,7 @@ class CodeAnalyzer:
 
         except Exception as e:
 
-            logger.log("WARNING", f"Error parseando código: {str(e)}", module="analyzer")
+            logger.log("WARNING", f"Error parseando código: {str(e)}", modulo="analyzer")
 
             return ast.Module(body=[], type_ignores=[])
 
@@ -1188,7 +1188,7 @@ class RepairEngine:
 
         self.backup_dir.mkdir(exist_ok=True)
 
-        logger.log("INFO", "RepairEngine iniciado", module="repair")
+        logger.log("INFO", "RepairEngine iniciado", modulo="repair")
 
 
 
@@ -1294,7 +1294,7 @@ class RepairEngine:
 
             Path(file_path).write_text(original_content)
 
-            logger.log("ERROR", f"Error en reparación: {str(e)}", module="repair")
+            logger.log("ERROR", f"Error en reparación: {str(e)}", modulo="repair")
 
             return {"status": "error", "error": str(e)}
 
@@ -1396,7 +1396,7 @@ class ResourceGovernor:
 
     async def throttle_system(self):
 
-        logger.log("WARNING", "Umbral de recursos excedido - Activando throttling", module="governor")
+        logger.log("WARNING", "Umbral de recursos excedido - Activando throttling", modulo="governor")
 
         # Disminuir prioridad de tareas no críticas
 
@@ -1420,7 +1420,7 @@ class ResourceGovernor:
 
         self.ram_limit = ram
 
-        logger.log("INFO", f"Límites actualizados: CPU={cpu}%, RAM={ram}%", module="governor")
+        logger.log("INFO", f"Límites actualizados: CPU={cpu}%, RAM={ram}%", modulo="governor")
 
 
 
@@ -1434,7 +1434,7 @@ class DependencyMapper:
 
         self.dependency_graph = {}
 
-        logger.log("INFO", "DependencyMapper iniciado", module="dependencies")
+        logger.log("INFO", "DependencyMapper iniciado", modulo="dependencies")
 
 
 
@@ -1914,7 +1914,7 @@ class LegalComplianceEngine:
 
         asyncio.create_task(self._store_encryption_key())
 
-        logger.log("INFO", "Motor legal iniciado", module="legal")
+        logger.log("INFO", "Motor legal iniciado", modulo="legal")
 
 
 
@@ -1940,7 +1940,7 @@ class LegalComplianceEngine:
 
         except Exception as e:
 
-            logger.log("ERROR", f"Error cargando reglas legales: {str(e)}", module="legal")
+            logger.log("ERROR", f"Error cargando reglas legales: {str(e)}", modulo="legal")
 
         return default_rules
 
@@ -1968,7 +1968,7 @@ class LegalComplianceEngine:
 
             except Exception as e:
 
-                logger.log("ERROR", f"Error en monitoreo legal: {str(e)}", module="legal")
+                logger.log("ERROR", f"Error en monitoreo legal: {str(e)}", modulo="legal")
 
                 await asyncio.sleep(3600)  # Reintentar en 1 hora
 
@@ -2004,7 +2004,7 @@ class LegalComplianceEngine:
 
         except Exception as e:
 
-            logger.log("ERROR", f"Error verificando TOS: {str(e)}", module="legal")
+            logger.log("ERROR", f"Error verificando TOS: {str(e)}", modulo="legal")
 
         return False
 
@@ -2038,7 +2038,7 @@ class LegalComplianceEngine:
 
             except Exception as e:
 
-                logger.log("ERROR", f"Override legal inválido: {str(e)}", module="legal")
+                logger.log("ERROR", f"Override legal inválido: {str(e)}", modulo="legal")
 
         if self.legal_rules["privacy"]["encryption_required"]:
 
@@ -2066,7 +2066,7 @@ class LegalComplianceEngine:
 
         except Exception as e:
 
-            logger.log("ERROR", f"Error al habilitar cifrado: {str(e)}", module="legal")
+            logger.log("ERROR", f"Error al habilitar cifrado: {str(e)}", modulo="legal")
 
             await self._generate_audit_log("encryption_failure", ["Cifrado fallido"], severity="high")
 
@@ -2124,7 +2124,7 @@ class SecurityEnhancementModule:
 
         self.waf_endpoint = WAF_ENDPOINT
 
-        logger.log("INFO", "Módulo de Seguridad Avanzada iniciado", module="security")
+        logger.log("INFO", "Módulo de Seguridad Avanzada iniciado", modulo="security")
 
         asyncio.create_task(self._auto_rotate_credentials())
 
@@ -2168,7 +2168,7 @@ class SecurityEnhancementModule:
 
             except Exception as e:
 
-                logger.log("ERROR", f"Error rotando credenciales: {str(e)}", module="security")
+                logger.log("ERROR", f"Error rotando credenciales: {str(e)}", modulo="security")
 
                 await asyncio.sleep(300)
 
@@ -2274,7 +2274,7 @@ class SecurityEnhancementModule:
 
         except Exception as e:
 
-            logger.log("ERROR", f"Error notificando WAF: {str(e)}", module="security")
+            logger.log("ERROR", f"Error notificando WAF: {str(e)}", modulo="security")
 
 
 
@@ -2326,7 +2326,7 @@ class AutoRecoveryEngine:
 
             except Exception as e:
 
-                logger.log("ERROR", f"Fallo en monitorización: {str(e)}", module="recovery")
+                logger.log("ERROR", f"Fallo en monitorización: {str(e)}", modulo="recovery")
 
                 await asyncio.sleep(60)
 
@@ -2430,7 +2430,7 @@ class AutoRecoveryEngine:
 
             if report["details"][component]["status"] == "critical":
 
-                logger.log("INFO", f"Reiniciando {component}", module="recovery")
+                logger.log("INFO", f"Reiniciando {component}", modulo="recovery")
 
                 # Lógica de reinicio real
 
@@ -2472,7 +2472,7 @@ class AutoRecoveryEngine:
 
         """Lógica para reiniciar la base de datos"""
 
-        logger.log("INFO", "Reiniciando base de datos", module="recovery")
+        logger.log("INFO", "Reiniciando base de datos", modulo="recovery")
 
         # Implementación real aquí
 
@@ -2484,7 +2484,7 @@ class AutoRecoveryEngine:
 
         """Lógica para reiniciar nodos"""
 
-        logger.log("INFO", "Reiniciando nodos", module="recovery")
+        logger.log("INFO", "Reiniciando nodos", modulo="recovery")
 
         # Implementación real aquí
 
@@ -2496,7 +2496,7 @@ class AutoRecoveryEngine:
 
         """Optimización de base de datos"""
 
-        logger.log("INFO", "Optimizando base de datos", module="recovery")
+        logger.log("INFO", "Optimizando base de datos", modulo="recovery")
 
         # Implementación real aquí
 
@@ -2508,7 +2508,7 @@ class AutoRecoveryEngine:
 
         """Liberación de memoria"""
 
-        logger.log("INFO", "Liberando memoria", module="recovery")
+        logger.log("INFO", "Liberando memoria", modulo="recovery")
 
         # Implementación real aquí
 
@@ -2528,7 +2528,7 @@ class KPIMetricSystem:
 
         self.metrics = {}
 
-        logger.log("INFO", "KPIMetricSystem iniciado", module="kpi")
+        logger.log("INFO", "KPIMetricSystem iniciado", modulo="kpi")
 
 
 
@@ -2602,7 +2602,7 @@ class VersionManager:
 
         self.current_version = "1.0.0"
 
-        logger.log("INFO", "VersionManager iniciado", module="version")
+        logger.log("INFO", "VersionManager iniciado", modulo="version")
 
 
 
@@ -2650,7 +2650,7 @@ class RegressionValidator:
 
         self.baseline_metrics = {}
 
-        logger.log("INFO", "RegressionValidator iniciado", module="regression")
+        logger.log("INFO", "RegressionValidator iniciado", modulo="regression")
 
 
 
@@ -2764,7 +2764,7 @@ class EvolutionEngine:
 
         self.external_ias = ["GPT", "Claude", "DeepSeek"]
 
-        logger.log("INFO", "EvolutionEngine iniciado", module="evolution")
+        logger.log("INFO", "EvolutionEngine iniciado", modulo="evolution")
 
         asyncio.create_task(self.run_evolution_cycle())
 
@@ -2802,7 +2802,7 @@ class EvolutionEngine:
 
             except Exception as e:
 
-                logger.log("ERROR", f"Error en ciclo de evolución: {str(e)}", module="evolution")
+                logger.log("ERROR", f"Error en ciclo de evolución: {str(e)}", modulo="evolution")
 
                 await asyncio.sleep(300)
 
@@ -2898,7 +2898,7 @@ class TestEngine:
 
         self.test_environments = ["sandbox", "staging", "production"]
 
-        logger.log("INFO", "TestEngine iniciado", module="testing")
+        logger.log("INFO", "TestEngine iniciado", modulo="testing")
 
 
 
@@ -2946,7 +2946,7 @@ class TestEngine:
 
         # Implementación real de pruebas unitarias
 
-        logger.log("INFO", f"Ejecutando pruebas unitarias para '{improvement}' en {env}", module="testing")
+        logger.log("INFO", f"Ejecutando pruebas unitarias para '{improvement}' en {env}", modulo="testing")
 
         await asyncio.sleep(1)
 
@@ -2966,7 +2966,7 @@ class TestEngine:
 
         # Implementación real de pruebas de integración
 
-        logger.log("INFO", f"Ejecutando pruebas de integración para '{improvement}' en {env}", module="testing")
+        logger.log("INFO", f"Ejecutando pruebas de integración para '{improvement}' en {env}", modulo="testing")
 
         await asyncio.sleep(2)
 
@@ -3024,7 +3024,7 @@ class DeploymentEngine:
 
             except Exception as e:
 
-                logger.log("ERROR", f"Error desplegando mejora: {str(e)}", module="deployment")
+                logger.log("ERROR", f"Error desplegando mejora: {str(e)}", modulo="deployment")
 
         return deployed
 
@@ -3032,7 +3032,7 @@ class DeploymentEngine:
 
     async def _gradual_deploy(self, improvement: Dict, percent: int) -> bool:
 
-        logger.log("INFO", f"Desplegando mejora al {percent}%: {improvement}", module="deployment")
+        logger.log("INFO", f"Desplegando mejora al {percent}%: {improvement}", modulo="deployment")
 
         # Implementación real de despliegue gradual
 
@@ -3044,13 +3044,13 @@ class DeploymentEngine:
 
     async def _rollback_deployment(self, improvement: Dict, failed_percent: int):
 
-        logger.log("WARNING", f"Iniciando rollback al {failed_percent}% para: {improvement}", module="deployment")
+        logger.log("WARNING", f"Iniciando rollback al {failed_percent}% para: {improvement}", modulo="deployment")
 
         # Lógica de rollback real
 
         await asyncio.sleep(0.5)
 
-        logger.log("INFO", f"Rollback completado para: {improvement}", module="deployment")
+        logger.log("INFO", f"Rollback completado para: {improvement}", modulo="deployment")
 
 
 
@@ -3064,7 +3064,7 @@ class VersioningEngine:
 
         self.memory = memory
 
-        logger.log("INFO", "VersioningEngine iniciado", module="versioning")
+        logger.log("INFO", "VersioningEngine iniciado", modulo="versioning")
 
 
 
@@ -3114,7 +3114,7 @@ class PostDeploymentMonitor:
 
         self.memory = memory
 
-        logger.log("INFO", "PostDeploymentMonitor iniciado", module="monitoring")
+        logger.log("INFO", "PostDeploymentMonitor iniciado", modulo="monitoring")
 
         asyncio.create_task(self.continuous_monitoring())
 
@@ -3128,13 +3128,13 @@ class PostDeploymentMonitor:
 
                 if await self.check_regressions():
 
-                    logger.log("WARNING", "Regresiones detectadas", module="monitoring")
+                    logger.log("WARNING", "Regresiones detectadas", modulo="monitoring")
 
                 await asyncio.sleep(300)  # Chequear cada 5 minutos
 
             except Exception as e:
 
-                logger.log("ERROR", f"Error en monitoreo: {str(e)}", module="monitoring")
+                logger.log("ERROR", f"Error en monitoreo: {str(e)}", modulo="monitoring")
 
                 await asyncio.sleep(60)
 
@@ -3188,19 +3188,19 @@ class RollbackEngine:
 
         self.versioning = versioning
 
-        logger.log("INFO", "RollbackEngine iniciado", module="rollback")
+        logger.log("INFO", "RollbackEngine iniciado", modulo="rollback")
 
 
 
     async def trigger_rollback(self, deployment_id: str, reason: str):
 
-        logger.log("WARNING", f"Iniciando rollback para despliegue {deployment_id}", module="rollback")
+        logger.log("WARNING", f"Iniciando rollback para despliegue {deployment_id}", modulo="rollback")
 
         pre_deploy = await self.versioning.get_snapshot(f"pre-deploy-{deployment_id}")
 
         if not pre_deploy:
 
-            logger.log("ERROR", f"Snapshot pre-deploy no encontrado para {deployment_id}", module="rollback")
+            logger.log("ERROR", f"Snapshot pre-deploy no encontrado para {deployment_id}", modulo="rollback")
 
             return False
 
@@ -3212,13 +3212,13 @@ class RollbackEngine:
 
             await self._analyze_failure(reason)
 
-            logger.log("INFO", f"Rollback completado para {deployment_id}", module="rollback")
+            logger.log("INFO", f"Rollback completado para {deployment_id}", modulo="rollback")
 
             return True
 
         except Exception as e:
 
-            logger.log("CRITICAL", f"Error en rollback: {str(e)}", module="rollback")
+            logger.log("CRITICAL", f"Error en rollback: {str(e)}", modulo="rollback")
 
             return False
 
@@ -3228,7 +3228,7 @@ class RollbackEngine:
 
         # Lógica de restauración real
 
-        logger.log("INFO", "Restaurando estado del sistema", module="rollback")
+        logger.log("INFO", "Restaurando estado del sistema", modulo="rollback")
 
         await asyncio.sleep(3)
 
@@ -3238,7 +3238,7 @@ class RollbackEngine:
 
         # Análisis de causa-raíz
 
-        logger.log("INFO", f"Analizando fallo: {reason}", module="rollback")
+        logger.log("INFO", f"Analizando fallo: {reason}", modulo="rollback")
 
         await asyncio.sleep(2)
 
@@ -3254,7 +3254,7 @@ class CommandInterpreter:
 
         self.memory = memory
 
-        logger.log("INFO", "CommandInterpreter iniciado", module="commands")
+        logger.log("INFO", "CommandInterpreter iniciado", modulo="commands")
 
 
 
@@ -3316,7 +3316,7 @@ class EvolutionEngineFinalizer:
 
         self.memory = memory
 
-        logger.log("INFO", "Preparando sistema para producción", module="finalizer")
+        logger.log("INFO", "Preparando sistema para producción", modulo="finalizer")
 
 
 
@@ -3330,7 +3330,7 @@ class EvolutionEngineFinalizer:
 
         self.perform_security_audit()
 
-        logger.log("SUCCESS", "Sistema listo para producción", module="finalizer")
+        logger.log("SUCCESS", "Sistema listo para producción", modulo="finalizer")
 
 
 
@@ -3408,7 +3408,7 @@ class EvolutionEngineFinalizer:
 
     def perform_security_audit(self):
 
-        logger.log("INFO", "Auditoría de seguridad completada", module="finalizer")
+        logger.log("INFO", "Auditoría de seguridad completada", modulo="finalizer")
 
 
 
@@ -3422,7 +3422,7 @@ class EventBus:
 
         self.listeners = {}
 
-        logger.log("INFO", "EventBus iniciado", module="events")
+        logger.log("INFO", "EventBus iniciado", modulo="events")
 
 
 
