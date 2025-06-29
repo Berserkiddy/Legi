@@ -140,7 +140,7 @@ class Logger:
 
 logger = Logger(level=LOG_LEVEL)
 
-logger.log("INFO", "Iniciando LEGIÓN OMEGA v4.0", modulo="core")
+logger.log("INFO", "Iniciando LEGIÓN OMEGA v4.0", module="core")
 
 
 
@@ -1520,7 +1520,7 @@ class DependencyMapper:
 
         except Exception as e:
 
-            logger.log("ERROR", f"Error analizando dependencias: {str(e)}", module="dependencies")
+            logger.log("ERROR", f"Error analizando dependencias: {str(e)}", modulo="dependencies")
 
             return []
 
@@ -1534,7 +1534,7 @@ class CrossModuleValidator:
 
         self.memory = memory
 
-        logger.log("INFO", "CrossModuleValidator iniciado", module="validator")
+        logger.log("INFO", "CrossModuleValidator iniciado", modulo="validator")
 
 
 
@@ -1574,7 +1574,7 @@ class LegalComplianceIntegrator:
 
         self.regulations = {}
 
-        logger.log("INFO", "LegalComplianceIntegrator iniciado", module="legal_integrator")
+        logger.log("INFO", "LegalComplianceIntegrator iniciado", modulo="legal_integrator")
 
         asyncio.create_task(self.update_regulations())
 
@@ -1594,7 +1594,7 @@ class LegalComplianceIntegrator:
 
             except Exception as e:
 
-                logger.log("ERROR", f"Error actualizando normativas: {str(e)}", module="legal_integrator")
+                logger.log("ERROR", f"Error actualizando normativas: {str(e)}", modulo="legal_integrator")
 
                 await asyncio.sleep(3600)
 
@@ -1646,7 +1646,7 @@ class Deployer:
 
         self.expansion_attempts = 0
 
-        logger.log("INFO", "Deployer iniciado", module="deployer")
+        logger.log("INFO", "Deployer iniciado", modulo="deployer")
 
 
 
@@ -1674,7 +1674,7 @@ class Deployer:
 
         except Exception as e:
 
-            logger.log("ERROR", f"Error inicializando red: {str(e)}", module="deployer")
+            logger.log("ERROR", f"Error inicializando red: {str(e)}", modulo="deployer")
 
             return False
 
@@ -1716,7 +1716,7 @@ class Deployer:
 
         except Exception as e:
 
-            logger.log("ERROR", f"Error listando nodos: {str(e)}", module="deployer")
+            logger.log("ERROR", f"Error listando nodos: {str(e)}", modulo="deployer")
 
             return []
 
