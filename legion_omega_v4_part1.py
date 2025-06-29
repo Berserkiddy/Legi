@@ -140,7 +140,7 @@ class Logger:
 
 logger = Logger(level=LOG_LEVEL)
 
-logger.log("INFO", "Iniciando LEGIÓN OMEGA v4.0", module="core")
+logger.log("INFO", "Iniciando LEGIÓN OMEGA v4.0", modulo="core")
 
 
 
