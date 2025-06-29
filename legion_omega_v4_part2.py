@@ -1,272 +1,191 @@
-# ===================== PROTOCOLO FÉNIX =====================
+#===================== PROTOCOLO FÉNIX =====================
 
 class PhoenixProtocol:
+"""Protocolo de recuperación de emergencia con implementación real"""
+def init(self, memory: DistributedMemory, security_manager: SecurityManager):
+self.memory = memory
+self.security_manager = security_manager
+self.threshold = 80
+logger.log("INFO", "Protocolo Fénix activado", module="phoenix")
+asyncio.create_task(self.monitor_phoenix_conditions())
 
-    """Protocolo de recuperación de emergencia"""
+async def monitor_phoenix_conditions(self):  
+    while True:  
+        try:  
+            threat_level = await self._get_current_threat_level()  
+            if threat_level >= self.threshold:  
+                await self.activate_phoenix_protocol()  
+            await asyncio.sleep(60)  
+        except Exception as e:  
+            logger.log("ERROR", f"Error en monitor Fénix: {str(e)}", module="phoenix")  
+            await asyncio.sleep(30)  
 
-    def __init__(self, memory: DistributedMemory, security_manager: SecurityManager):
+async def _get_current_threat_level(self) -> int:  
+    """Cálculo real de nivel de amenaza basado en métricas"""  
+    try:  
+        # 1. Evaluar incidentes de seguridad recientes  
+        incident_keys = await self.memory.get_all_keys("security_incident:*")  
+        critical_incidents = 0  
+          
+        for key in incident_keys:  
+            incident = json.loads(await self.memory.get_data(key))  
+            if incident.get("threat_score", 0) > 7:  
+                critical_incidents += 1  
+          
+        # 2. Verificar estado de salud del sistema  
+        health_report = json.loads(await self.memory.get_data("system_health") or "{}")  
+        health_status = health_report.get("status", "unknown")  
+          
+        # 3. Calcular nivel de amenaza compuesto  
+        threat_level = min(100, critical_incidents * 15 + (40 if health_status == "critical" else 0))  
+        return threat_level  
+    except Exception as e:  
+        logger.log("ERROR", f"Error calculando nivel de amenaza: {str(e)}", module="phoenix")  
+        return 0  
 
-        self.memory = memory
+async def activate_phoenix_protocol(self):  
+    logger.log("CRITICAL", "ACTIVANDO PROTOCOLO FÉNIX", module="phoenix")  
+    await self._secure_data_wipe()  
+    await self._restore_from_backups()  
+    await self._clean_restart()  
+    logger.log("SUCCESS", "Sistema recuperado mediante Protocolo Fénix", module="phoenix")  
 
-        self.security_manager = security_manager
+async def _secure_data_wipe(self):  
+    """Borrado seguro real de datos críticos"""  
+    logger.log("INFO", "Iniciando borrado seguro de datos críticos", module="phoenix")  
+      
+    # 1. Eliminar datos sensibles en memoria distribuida  
+    sensitive_patterns = [  
+        "sensitive_data:*",  
+        "security:credentials",  
+        "encryption:key",  
+        "legal:*",  
+        "audit_log:*"  
+    ]  
+      
+    for pattern in sensitive_patterns:  
+        keys = await self.memory.get_all_keys(pattern)  
+        for key in keys:  
+            await self.memory.delete_data(key)  
+      
+    # 2. Sobrescribir y eliminar archivos sensibles locales  
+    sensitive_files = [  
+        "security_key.key",  
+        "legal_rules.json",  
+        "analysis_rules.json"  
+    ]  
+      
+    for file in sensitive_files:  
+        if os.path.exists(file):  
+            # Sobrescribir con datos aleatorios antes de eliminar  
+            with open(file, "wb") as f:  
+                f.write(os.urandom(1024))  
+            os.remove(file)  
+      
+    logger.log("INFO", "Borrado seguro de datos completado", module="phoenix")  
 
-        self.threshold = 80
+async def _restore_from_backups(self):  
+    """Restauración real desde backups"""  
+    logger.log("INFO", "Iniciando restauración desde backups", module="phoenix")  
+      
+    try:  
+        # 1. Encontrar el backup más reciente  
+        backup_files = sorted(Path(BACKUP_DIR).glob("system_backup_*.json"))  
+        if not backup_files:  
+            raise FileNotFoundError("No se encontraron backups")  
+          
+        latest_backup = backup_files[-1]  
+          
+        # 2. Cargar y restaurar datos  
+        with open(latest_backup, "r") as f:  
+            backup_data = json.load(f)  
+          
+        for key, value in backup_data.items():  
+            await self.memory.set_data(key, value)  
+          
+        logger.log("INFO", f"Backup restaurado: {latest_backup.name}", module="phoenix")  
+    except Exception as e:  
+        logger.log("ERROR", f"Error restaurando backup: {str(e)}", module="phoenix")  
+        await self._generate_emergency_log("BACKUP_FAILURE", str(e))  
 
-        logger.log("INFO", "Protocolo Fénix activado", module="phoenix")
+async def _clean_restart(self):  
+    """Reinicio limpio del sistema con gestión real de procesos"""  
+    logger.log("INFO", "Iniciando reinicio limpio del sistema", module="phoenix")  
+      
+    # 1. Detener todas las tareas asincrónicas  
+    tasks = [t for t in asyncio.all_tasks() if t is not asyncio.current_task()]  
+    for task in tasks:  
+        task.cancel()  
+      
+    # 2. Reiniciar servicios dependientes  
+    await self._restart_dependent_services()  
+      
+    # 3. Reestablecer estado interno  
+    await self.memory.set_data("system_recovery_mode", "true")  
+    logger.log("INFO", "Reinicio limpio completado", module="phoenix")  
 
-        asyncio.create_task(self.monitor_phoenix_conditions())
+async def _restart_dependent_services(self):  
+    """Reiniciar servicios externos reales"""  
+    # Ejemplo: Reiniciar servicio Redis  
+    try:  
+        subprocess.run(["redis-cli", "SHUTDOWN"], check=True)  
+        subprocess.run(["redis-server", "--daemonize yes"], check=True)  
+        logger.log("INFO", "Servicio Redis reiniciado", module="phoenix")  
+    except Exception as e:  
+        logger.log("ERROR", f"Error reiniciando Redis: {str(e)}", module="phoenix")
 
-
-
-    async def monitor_phoenix_conditions(self):
-
-        while True:
-
-            try:
-
-                threat_level = await self._get_current_threat_level()
-
-                if threat_level >= self.threshold:
-
-                    await self.activate_phoenix_protocol()
-
-                await asyncio.sleep(60)
-
-            except Exception as e:
-
-                logger.log("ERROR", f"Error en monitor Fénix: {str(e)}", module="phoenix")
-
-                await asyncio.sleep(30)
-
-
-
-    async def _get_current_threat_level(self) -> int:
-
-        # Implementación real de evaluación de amenazas
-
-        return random.randint(0, 100)
-
-
-
-    async def activate_phoenix_protocol(self):
-
-        logger.log("CRITICAL", "ACTIVANDO PROTOCOLO FÉNIX", module="phoenix")
-
-        await self._secure_data_wipe()
-
-        await self._restore_from_backups()
-
-        await self._clean_restart()
-
-        logger.log("SUCCESS", "Sistema recuperado mediante Protocolo Fénix", module="phoenix")
-
-
-
-    async def _secure_data_wipe(self):
-
-        logger.log("INFO", "Borrado seguro de datos críticos", module="phoenix")
-
-        # Implementación real de borrado seguro
-
-        await asyncio.sleep(5)
-
-
-
-    async def _restore_from_backups(self):
-
-        logger.log("INFO", "Restaurando desde backups distribuidos", module="phoenix")
-
-        # Implementación real de restauración
-
-        await asyncio.sleep(10)
-
-
-
-    async def _clean_restart(self):
-
-        logger.log("INFO", "Reinicio limpio del sistema", module="phoenix")
-
-        # Implementación real de reinicio
-
-        await asyncio.sleep(3)
-
-
-
-# ===================== INTEGRACIÓN TINYLLAMA =====================
+#===================== INTEGRACIÓN TINYLLAMA =====================
 
 class TinyLlamaIntegration:
-
-    """Integración con TinyLlama para consultas locales"""
-
-    def __init__(self, model_path: str = TINYLLAMA_MODEL_PATH):
-
-        self.model_path = model_path
-
-        self.loaded = False
-
-        logger.log("INFO", f"TinyLlama configurado en {model_path}", module="tinyllama")
-
-        asyncio.create_task(self.load_model())
-
-
-
-    async def load_model(self):
-
-        # Implementación real de carga del modelo
-
-        logger.log("INFO", "Cargando modelo TinyLlama...", module="tinyllama")
-
-        await asyncio.sleep(10)  # Simulación de carga
-
-        self.loaded = True
-
-        logger.log("SUCCESS", "Modelo TinyLlama cargado", module="tinyllama")
-
-
-
-    async def query(self, prompt: str) -> str:
-
-        if not self.loaded:
-
-            return "Modelo no cargado aún"
-
-        # Implementación real de consulta al modelo
-
-        return f"Respuesta simulada para: {prompt}"
-
-
-
-# ===================== FUNCIÓN PRINCIPAL =====================
-
-async def main():
-
-    """Función de inicio del sistema LEGIÓN OMEGA"""
-
-    # Inicializar componentes centrales
-
-    security_manager = SecurityManager()
-
-    distributed_memory = DistributedMemory()
-
-    await distributed_memory.connect()
-
-    
-
-    # Inicializar bus de eventos
-
-    event_bus = EventBus()
-
-    
-
-    # Inicializar subsistemas
-
-    executor = Executor(distributed_memory)
-
-    analyzer = CodeAnalyzer(distributed_memory)
-
-    repair_engine = RepairEngine(distributed_memory)
-
-    deployer = Deployer(distributed_memory)
-
-    await deployer.initialize_network()
-
-    legal_engine = LegalComplianceEngine(distributed_memory)
-
-    security_module = SecurityEnhancementModule(distributed_memory)
-
-    recovery_engine = AutoRecoveryEngine(distributed_memory)
-
-    versioning_engine = VersioningEngine(distributed_memory)
-
-    test_engine = TestEngine(distributed_memory)
-
-    deployment_engine = DeploymentEngine(distributed_memory, versioning_engine)
-
-    rollback_engine = RollbackEngine(distributed_memory, versioning_engine)
-
-    monitor = PostDeploymentMonitor(distributed_memory)
-
-    command_interpreter = CommandInterpreter(distributed_memory)
-
-    evolution_engine = EvolutionEngine(distributed_memory, test_engine, deployment_engine)
-
-    finalizer = EvolutionEngineFinalizer(evolution_engine, distributed_memory)
-
-    
-
-    # Inicializar módulos de infraestructura nuevos
-
-    resource_governor = ResourceGovernor(distributed_memory)
-
-    dependency_mapper = DependencyMapper(distributed_memory)
-
-    cross_validator = CrossModuleValidator(distributed_memory)
-
-    legal_integrator = LegalComplianceIntegrator(distributed_memory)
-
-    kpi_system = KPIMetricSystem(distributed_memory)
-
-    version_manager = VersionManager(distributed_memory)
-
-    regression_validator = RegressionValidator(distributed_memory)
-
-    phoenix_protocol = PhoenixProtocol(distributed_memory, security_manager)
-
-    tinyllama = TinyLlamaIntegration()
-
-    
-
-    # Registrar eventos
-
-    event_bus.register("analysis_complete", repair_engine.analyze_and_repair)
-
-    event_bus.register("deployment_start", versioning_engine.save_snapshot)
-
-    event_bus.register("resource_alert", resource_governor.throttle_system)
-
-    
-
-    # Tareas en segundo plano
-
-    asyncio.create_task(legal_engine.monitor_regulations())
-
-    asyncio.create_task(security_module.detect_and_mitigate({"data": "sample request"}))
-
-    asyncio.create_task(monitor.continuous_monitoring())
-
-    asyncio.create_task(resource_governor.monitor_resources())
-
-    asyncio.create_task(dependency_mapper.analyze_dependencies())
-
-    asyncio.create_task(legal_integrator.update_regulations())
-
-    
-
-    # Ciclo principal
-
-    logger.log("INFO", "Sistema LEGIÓN OMEGA operativo", module="core")
-
-    while True:
-
-        # Ejecutar tareas periódicas
-
-        await asyncio.sleep(3600)  # Ejecutar ciclo cada hora
-
-
-
-if __name__ == "__main__":
-
-    try:
-
-        asyncio.run(main())
-
-    except KeyboardInterrupt:
-
-        logger.log("INFO", "Apagando sistema LEGIÓN OMEGA", module="core")
-
-    except Exception as e:
-
-        logger.log("CRITICAL", f"Error fatal: {str(e)}", module="core")
-
-        sys.exit(1)
-
+"""Integración real con TinyLlama usando llama-cpp-python"""
+def init(self, model_path: str = TINYLLAMA_MODEL_PATH):
+self.model_path = model_path
+self.model = None
+logger.log("INFO", f"TinyLlama configurado en {model_path}", module="tinyllama")
+asyncio.create_task(self.load_model())
+
+async def load_model(self):  
+    """Carga real del modelo GGUF"""  
+    try:  
+        from llama_cpp import Llama  
+          
+        logger.log("INFO", "Cargando modelo TinyLlama...", module="tinyllama")  
+          
+        # Configuración real del modelo  
+        self.model = Llama(  
+            model_path=self.model_path,  
+            n_ctx=2048,  
+            n_threads=4,  
+            n_gpu_layers=0  # 0 para solo CPU  
+        )  
+          
+        # Prueba de inferencia inicial  
+        test_output = self.model("Test", max_tokens=1, stop=["\n"], echo=False)  
+        if not test_output:  
+            raise RuntimeError("La prueba de inferencia falló")  
+          
+        logger.log("SUCCESS", "Modelo TinyLlama cargado y verificado", module="tinyllama")  
+    except ImportError:  
+        logger.log("ERROR", "Paquete llama-cpp-python no instalado", module="tinyllama")  
+    except Exception as e:  
+        logger.log("ERROR", f"Error cargando modelo: {str(e)}", module="tinyllama")  
+
+async def query(self, prompt: str) -> str:  
+    """Consulta real al modelo cargado"""  
+    if not self.model:  
+        return "Modelo no disponible"  
+      
+    try:  
+        # Configuración de parámetros de inferencia  
+        output = self.model(  
+            prompt,  
+            max_tokens=256,  
+            temperature=0.7,  
+            top_p=0.95,  
+            stop=["\n", "###"]  
+        )  
+          
+        return output['choices'][0]['text'].strip()  
+    except Exception as e:  
+        logger.log("ERROR", f"Error en consulta TinyLlama: {str(e)}", module="tinyllama")  
+        return f"Error: {str(e)}"
