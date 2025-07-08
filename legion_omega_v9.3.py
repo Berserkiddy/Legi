@@ -323,7 +323,7 @@ class BasicCipher:
             return Fernet(key)
         except ImportError:
             logger.log("ERROR", "cryptography no disponible, usando cifrado básico", modulo="security")
-            return self.BasicCipher(str(uuid.uuid4())
+            return self.BasicCipher(str(uuid.uuid4()))
     def generate_ecdsa_key_pair(self) -> Tuple[Any, str]:
         """Generar nuevo par de claves ECDSA con fallback"""
         try:
