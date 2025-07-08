@@ -107,7 +107,11 @@ async def check_connectivity(url: str = "https://google.com", timeout: int = 5) 
         except:
             return False
 
-IS_OFFLINE = not await check_connectivity()
+# 🛠 FIX: correr función async desde un contexto síncrono
+def check_connectivity_sync():
+    return asyncio.run(check_connectivity())
+
+IS_OFFLINE = not check_connectivity_sync()
 
 # ===================== SISTEMA DE LOGGING =====================
 class OmegaLogger:
