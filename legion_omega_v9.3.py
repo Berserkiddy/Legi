@@ -275,7 +275,26 @@ MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE8J5k5Q8YQ3pNjXe9b7zQ2W8J7ZtK
 v7Xb7d3jY7Gq1+9vC7R5Xf8x5Kj3P1wzN8yL0yW2Zb0yY7Xb9FyQ==
 -----END PUBLIC KEY-----
 """
+
+class BasicCipher:
+    """Cifrado básico para entornos sin cryptography"""
     
+    def __init__(self, key: str):
+        self.key = hashlib.sha256(key.encode()).digest()
+
+    def encrypt(self, data: str) -> str:
+        """Cifrado XOR básico con padding"""
+        data = data.encode()
+        padded = data + b'\0' * (32 - len(data) % 32)
+        encrypted = bytes(a ^ b for a, b in zip(padded, self.key * (len(padded) // len(self.key) + 1)))
+        return base64.b64encode(encrypted).decode()
+
+    def decrypt(self, encrypted_data: str) -> str:
+        """Descifrado XOR básico"""
+        data = base64.b64decode(encrypted_data)
+        decrypted = bytes(a ^ b for a, b in zip(data, self.key * (len(data) // len(self.key) + 1)))
+        return decrypted.rstrip(b'\0').decode()
+
     def _load_or_generate_key(self) -> Any:
         """Cargar o generar clave de cifrado con fallback a estándar"""
         try:
@@ -304,26 +323,7 @@ v7Xb7d3jY7Gq1+9vC7R5Xf8x5Kj3P1wzN8yL0yW2Zb0yY7Xb9FyQ==
             return Fernet(key)
         except ImportError:
             logger.log("ERROR", "cryptography no disponible, usando cifrado básico", modulo="security")
-            return self.BasicCipher(str(uuid.uuid4()))
-    
-    class BasicCipher:
-        """Cifrado básico para entornos sin cryptography"""
-        
-        def __init__(self, key: str):
-            self.key = hashlib.sha256(key.encode()).digest()
-        
-        def encrypt(self, data: str) -> str:
-            """Cifrado XOR básico con padding"""
-            data = data.encode()
-            padded = data + b'\0' * (32 - len(data) % 32)
-            return base64.b64encode(bytes(a ^ b for a, b in zip(padded, self.key * len(padded))).decode()
-        
-        def decrypt(self, encrypted_data: str) -> str:
-            """Descifrado XOR básico"""
-            data = base64.b64decode(encrypted_data)
-            decrypted = bytes(a ^ b for a, b in zip(data, self.key * len(data))
-            return decrypted.rstrip(b'\0').decode()
-    
+            return self.BasicCipher(str(uuid.uuid4())
     def generate_ecdsa_key_pair(self) -> Tuple[Any, str]:
         """Generar nuevo par de claves ECDSA con fallback"""
         try:
