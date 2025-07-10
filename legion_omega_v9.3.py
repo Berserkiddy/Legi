@@ -244,8 +244,7 @@ class AIValidationError(Exception):
 def ensure_dependencies():
     """Instalar dependencias críticas automáticamente"""
     required_packages = [
-        'psutil', 'cryptography', 'redis', 'pycryptodome', 'requests',
-        'openai', 'anthropic', 'google-generativeai', 'llama-cpp-python',
+        'psutil', 'cryptography', 'redis', 'pycryptodome', 'requests', 'llama-cpp-python',
         'backoff'
     ]
     installed = []
