@@ -1584,7 +1584,7 @@ class LegalSystem:
         return {
             "global": {
                 "forbidden_tasks": ["hacking", "phishing", "spamming", "ddos"],
-                "allowed_regions": ["US", "EU", "UK", "CA", "AU"]
+                "allowed_regions": ["US", "EU", "UK", "CA", "AU", "ES"]
             },
             "region_specific": {
                 "EU": {"gdpr_compliance": True, "data_retention": 30},
